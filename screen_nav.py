@@ -193,7 +193,8 @@ ScreenManager:
             on_release: root.manager.current = 'admin_login_screen'
             
 <AddLocationScreen>
-    on_request_permissions: self.on_request_permissions(*args)
+    permissions_granted: root.permissions_granted
+    on_permissions_granted: root.on_permissions_granted(*args)
     location_name : location_name
     zip_code: zip_code
     MDCard:
