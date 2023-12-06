@@ -98,6 +98,8 @@ class AddLocationScreen(Screen):
     location_name = ObjectProperty(None)
     zip_code = ObjectProperty(None)
 
+    permissions_granted = BooleanProperty(False)
+
     def __init__(self, **kwargs):
         super(AddLocationScreen, self).__init__(**kwargs)
         self.file_manager = MDFileManager(
@@ -136,14 +138,17 @@ class AddLocationScreen(Screen):
                 uri = autoclass('android.net.Uri').parse('package:' + package_name)
                 intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri)
                 activity.startActivityForResult(intent, request_code)
+                self.permissions_granted = True
             else:
                 toast("File manager permission granted")
         else:
-            # Handle permissions for other platforms if needed
-            pass
+            self.permissions_granted = True  # Set to True if no permissions are needed on other platforms
 
-    def on_request_permissions(self, *args):
-        toast("File manager permission granted")
+    def on_permissions_granted(self, instance, value):
+        if value:
+            toast("File manager permission granted")
+        else:
+            toast("File manager permission denied")
 
     def update_city_spinner(self, selected_state):
         state_city_mapping = {
